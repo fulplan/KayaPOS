@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { useStore } from "@/lib/store";
-import { db, type Product } from "@/lib/db";
+import { useStore, type CartItem } from "@/lib/store";
+import { db, type Product, type TaxRule } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -8,40 +8,57 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Search, 
-  ShoppingCart, 
-  Trash2, 
-  Plus, 
-  Minus, 
-  CreditCard, 
-  Banknote, 
+import {
+  Search,
+  ShoppingCart,
+  Trash2,
+  Plus,
+  Minus,
+  CreditCard,
+  Banknote,
   Smartphone,
   ScanBarcode,
   Percent,
   Calculator,
   UserPlus,
   RefreshCcw,
-  RotateCcw
+  RotateCcw,
+  Save,
+  FileText,
+  FolderOpen,
+  X
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
   DialogFooter,
   DialogTrigger
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function POS() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isSplitPaymentOpen, setIsSplitPaymentOpen] = useState(false);
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [isDraftsOpen, setIsDraftsOpen] = useState(false);
+  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [manualDiscount, setManualDiscount] = useState("0");
+  const [discountMode, setDiscountMode] = useState<'flat' | 'percentage'>('flat');
+  const [quoteName, setQuoteName] = useState("");
+  const [quoteNotes, setQuoteNotes] = useState("");
+  const [quoteValidDays, setQuoteValidDays] = useState("30");
   const [paymentSplits, setPaymentSplits] = useState({
     cash: 0,
     card: 0,
@@ -51,26 +68,39 @@ export default function POS() {
 
   const barcodeBuffer = useRef("");
   const lastKeyTime = useRef(0);
-  
-  const products = useLiveQuery(() => db.products.toArray());
-  const { 
-    cart, 
-    addToCart, 
-    removeFromCart, 
-    updateQuantity, 
-    clearCart, 
+
+  const products = useLiveQuery(() => db.products.toArray().then(ps => ps.filter(p => p.isActive !== false)));
+  const taxRules = useLiveQuery(() => db.taxRules.toArray().then(rs => rs.filter(r => r.isActive !== false)));
+  const drafts = useLiveQuery(() => db.orders.where('status').equals('draft').toArray());
+  const {
+    cart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    loadCart,
     taxRate,
+    taxRuleName,
+    setTaxRule,
     orderDiscount,
+    discountType,
     setOrderDiscount
   } = useStore();
 
-  // Barcode scanning logic
+  useEffect(() => {
+    const loadDefaultTax = async () => {
+      const allRules = await db.taxRules.toArray();
+      const defaultRule = allRules.find(r => r.isDefault);
+      if (defaultRule) {
+        setTaxRule(defaultRule.name, defaultRule.rate);
+      }
+    };
+    loadDefaultTax();
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const now = Date.now();
-      
-      // Scanners are fast, humans are slow. 
-      // If time between keys > 50ms, it's likely a human typing, not a scanner.
       if (now - lastKeyTime.current > 50) {
         barcodeBuffer.current = "";
       }
@@ -97,7 +127,10 @@ export default function POS() {
 
   const subtotal = cart.reduce((acc, item) => acc + ((item.price - item.discount) * item.quantity), 0);
   const taxAmount = subtotal * taxRate;
-  const finalTotal = Math.max(0, subtotal + taxAmount - orderDiscount);
+  const computedDiscount = discountType === 'percentage'
+    ? (subtotal + taxAmount) * (orderDiscount / 100)
+    : orderDiscount;
+  const finalTotal = Math.max(0, subtotal + taxAmount - computedDiscount);
 
   const handleCheckout = async (type: 'single' | 'split' | 'refund' | 'return', method?: 'cash' | 'momo' | 'card' | 'credit') => {
     if (cart.length === 0) return;
@@ -122,7 +155,10 @@ export default function POS() {
         })),
         subtotal: subtotal * multiplier,
         tax: taxAmount * multiplier,
-        discount: orderDiscount * multiplier,
+        taxRuleName,
+        taxRate,
+        discount: computedDiscount * multiplier,
+        discountType,
         total: finalTotal * multiplier,
         status: isNegative ? (type === 'refund' ? 'refunded' : 'cancelled') : 'completed',
         paymentMethods: payments,
@@ -130,9 +166,9 @@ export default function POS() {
         synced: false
       });
 
-      toast({ 
-        title: isNegative ? `${type.charAt(0).toUpperCase() + type.slice(1)} Success` : "Order Success", 
-        description: `Total: ₵${(finalTotal * multiplier).toFixed(2)}` 
+      toast({
+        title: isNegative ? `${type.charAt(0).toUpperCase() + type.slice(1)} Success` : "Order Success",
+        description: `Total: ₵${(finalTotal * multiplier).toFixed(2)}`
       });
       clearCart();
       setIsSplitPaymentOpen(false);
@@ -141,7 +177,118 @@ export default function POS() {
     }
   };
 
+  const handleSaveDraft = async () => {
+    if (cart.length === 0) return;
+    try {
+      await db.orders.add({
+        items: cart.map(item => ({
+          productId: item.id!,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          discount: item.discount
+        })),
+        subtotal,
+        tax: taxAmount,
+        taxRuleName,
+        taxRate,
+        discount: computedDiscount,
+        discountType,
+        total: finalTotal,
+        status: 'draft',
+        paymentMethods: [],
+        createdAt: new Date(),
+        synced: false,
+        notes: `Draft saved at ${new Date().toLocaleTimeString()}`
+      });
+      toast({ title: "Draft Saved", description: `${cart.length} items saved for later` });
+      clearCart();
+    } catch {
+      toast({ title: "Error", variant: "destructive", description: "Failed to save draft" });
+    }
+  };
+
+  const handleLoadDraft = async (draftId: number) => {
+    const draft = await db.orders.get(draftId);
+    if (!draft) return;
+
+    const cartItems: CartItem[] = [];
+    for (const item of draft.items) {
+      const product = await db.products.get(item.productId);
+      if (product) {
+        cartItems.push({ ...product, quantity: item.quantity, discount: item.discount || 0 });
+      }
+    }
+
+    loadCart(cartItems);
+    if (draft.discountType) {
+      setOrderDiscount(
+        draft.discountType === 'percentage' && draft.taxRate !== undefined
+          ? (draft.discount / ((draft.subtotal + draft.subtotal * draft.taxRate) || 1)) * 100
+          : draft.discount,
+        draft.discountType
+      );
+    }
+
+    await db.orders.delete(draftId);
+    toast({ title: "Draft Loaded", description: `${cartItems.length} items restored` });
+    setIsDraftsOpen(false);
+  };
+
+  const handleDeleteDraft = async (draftId: number) => {
+    await db.orders.delete(draftId);
+    toast({ title: "Draft Deleted" });
+  };
+
+  const handleSaveQuote = async () => {
+    if (cart.length === 0) return;
+    try {
+      const validDays = parseInt(quoteValidDays) || 30;
+      const validUntil = new Date();
+      validUntil.setDate(validUntil.getDate() + validDays);
+
+      await db.quotes.add({
+        items: cart.map(item => ({
+          productId: item.id!,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          discount: item.discount
+        })),
+        subtotal,
+        tax: taxAmount,
+        taxRuleName,
+        taxRate,
+        discount: computedDiscount,
+        discountType,
+        total: finalTotal,
+        customerName: quoteName.trim() || undefined,
+        notes: quoteNotes.trim() || undefined,
+        validUntil,
+        status: 'active',
+        createdAt: new Date(),
+      });
+      toast({ title: "Quote Created", description: `Valid for ${validDays} days` });
+      clearCart();
+      setIsQuoteOpen(false);
+      setQuoteName("");
+      setQuoteNotes("");
+    } catch {
+      toast({ title: "Error", variant: "destructive", description: "Failed to create quote" });
+    }
+  };
+
   const categories = Array.from(new Set(products?.map(p => p.category) || []));
+
+  const applyDiscount = () => {
+    const val = parseFloat(manualDiscount) || 0;
+    if (discountMode === 'percentage' && val > 100) {
+      toast({ title: "Invalid", description: "Percentage cannot exceed 100%", variant: "destructive" });
+      return;
+    }
+    setOrderDiscount(val, discountMode);
+    setIsDiscountOpen(false);
+  };
 
   return (
     <div className="h-[calc(100vh-6rem)] flex gap-6">
@@ -159,8 +306,8 @@ export default function POS() {
           </div>
           <ScrollArea className="w-auto max-w-md whitespace-nowrap pb-2">
             <div className="flex gap-2">
-              <Button 
-                variant={selectedCategory === null ? "default" : "outline"} 
+              <Button
+                variant={selectedCategory === null ? "default" : "outline"}
                 onClick={() => setSelectedCategory(null)}
                 className="rounded-full"
                 size="sm"
@@ -184,12 +331,12 @@ export default function POS() {
 
         <ScrollArea className="flex-1 rounded-xl border bg-card/50 p-4 shadow-inner">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {products?.filter(p => 
-              p.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+            {products?.filter(p =>
+              p.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
               (selectedCategory ? p.category === selectedCategory : true)
             ).map((product) => (
-              <Card 
-                key={product.id} 
+              <Card
+                key={product.id}
                 className="cursor-pointer hover:border-primary transition-all group overflow-hidden border-border/40 shadow-sm active:scale-95"
                 onClick={() => addToCart(product)}
               >
@@ -214,7 +361,7 @@ export default function POS() {
           <div className="flex items-center gap-2 font-bold text-primary">
             <ShoppingCart className="size-5" /> Cart Summary
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-1.5">
             <Dialog open={isDiscountOpen} onOpenChange={setIsDiscountOpen}>
               <DialogTrigger asChild>
                 <Button variant="outline" size="icon" className="h-9 w-9 border-primary/20 text-primary hover:bg-primary/10"><Percent className="size-4" /></Button>
@@ -222,21 +369,95 @@ export default function POS() {
               <DialogContent>
                 <DialogHeader><DialogTitle>Apply Order Discount</DialogTitle></DialogHeader>
                 <div className="space-y-4 py-4">
+                  <div className="flex gap-2">
+                    <Button
+                      variant={discountMode === 'flat' ? 'default' : 'outline'}
+                      className="flex-1"
+                      onClick={() => setDiscountMode('flat')}
+                    >
+                      ₵ Fixed Amount
+                    </Button>
+                    <Button
+                      variant={discountMode === 'percentage' ? 'default' : 'outline'}
+                      className="flex-1"
+                      onClick={() => setDiscountMode('percentage')}
+                    >
+                      % Percentage
+                    </Button>
+                  </div>
                   <div className="space-y-2">
-                    <Label>Discount Amount (₵)</Label>
-                    <Input type="number" value={manualDiscount} onChange={(e) => setManualDiscount(e.target.value)} autoFocus />
+                    <Label>{discountMode === 'flat' ? 'Discount Amount (₵)' : 'Discount Percentage (%)'}</Label>
+                    <Input
+                      type="number"
+                      value={manualDiscount}
+                      onChange={(e) => setManualDiscount(e.target.value)}
+                      max={discountMode === 'percentage' ? 100 : undefined}
+                      min="0"
+                      autoFocus
+                    />
                   </div>
-                  <div className="grid grid-cols-4 gap-2">
-                    {['5', '10', '20', '50'].map(val => (
-                      <Button key={val} variant="outline" onClick={() => setManualDiscount(val)}>₵{val}</Button>
-                    ))}
-                  </div>
+                  {discountMode === 'flat' ? (
+                    <div className="grid grid-cols-4 gap-2">
+                      {['5', '10', '20', '50'].map(val => (
+                        <Button key={val} variant="outline" onClick={() => setManualDiscount(val)}>₵{val}</Button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-4 gap-2">
+                      {['5', '10', '15', '25'].map(val => (
+                        <Button key={val} variant="outline" onClick={() => setManualDiscount(val)}>{val}%</Button>
+                      ))}
+                    </div>
+                  )}
+                  {discountMode === 'percentage' && subtotal > 0 && (
+                    <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
+                      Discount: ₵{((subtotal + taxAmount) * ((parseFloat(manualDiscount) || 0) / 100)).toFixed(2)} off ₵{(subtotal + taxAmount).toFixed(2)}
+                    </div>
+                  )}
                 </div>
                 <DialogFooter>
-                  <Button className="w-full h-11" onClick={() => { setOrderDiscount(parseFloat(manualDiscount) || 0); setIsDiscountOpen(false); }}>Apply Discount</Button>
+                  <Button variant="outline" onClick={() => { setOrderDiscount(0, 'flat'); setIsDiscountOpen(false); }}>Remove Discount</Button>
+                  <Button onClick={applyDiscount}>Apply Discount</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
+
+            <Button variant="outline" size="icon" className="h-9 w-9 border-primary/20 text-primary hover:bg-primary/10" onClick={handleSaveDraft} title="Save as Draft">
+              <Save className="size-4" />
+            </Button>
+
+            <Dialog open={isDraftsOpen} onOpenChange={setIsDraftsOpen}>
+              <DialogTrigger asChild>
+                <Button variant="outline" size="icon" className="h-9 w-9 border-primary/20 text-primary hover:bg-primary/10 relative" title="Open Drafts">
+                  <FolderOpen className="size-4" />
+                  {drafts && drafts.length > 0 && (
+                    <span className="absolute -top-1 -right-1 size-4 bg-primary text-[10px] text-primary-foreground rounded-full flex items-center justify-center font-bold">{drafts.length}</span>
+                  )}
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Saved Drafts</DialogTitle></DialogHeader>
+                <div className="space-y-3 py-4 max-h-[400px] overflow-y-auto">
+                  {drafts?.map((draft) => (
+                    <div key={draft.id} className="flex items-center justify-between p-3 border rounded-lg hover:bg-muted/50">
+                      <div>
+                        <div className="font-medium text-sm">{draft.items.length} items - ₵{draft.total.toFixed(2)}</div>
+                        <div className="text-xs text-muted-foreground">{new Date(draft.createdAt).toLocaleString()}</div>
+                        {draft.notes && <div className="text-xs text-muted-foreground mt-1">{draft.notes}</div>}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button size="sm" onClick={() => handleLoadDraft(draft.id!)}>Load</Button>
+                        <Button size="sm" variant="ghost" className="text-destructive" onClick={() => handleDeleteDraft(draft.id!)}><Trash2 className="size-4" /></Button>
+                      </div>
+                    </div>
+                  ))}
+                  {(!drafts || drafts.length === 0) && (
+                    <p className="text-center text-muted-foreground py-8">No saved drafts</p>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+
             <Button variant="outline" size="icon" className="h-9 w-9 text-rose-500 border-rose-100 hover:bg-rose-50" onClick={clearCart}><Trash2 className="size-4" /></Button>
           </div>
         </div>
@@ -276,8 +497,33 @@ export default function POS() {
         <div className="p-5 border-t bg-muted/20 space-y-4">
           <div className="space-y-2 bg-background p-3 rounded-xl border border-border/40 shadow-sm">
             <div className="flex justify-between text-sm text-muted-foreground"><span>Subtotal</span><span className="font-mono">₵{subtotal.toFixed(2)}</span></div>
-            <div className="flex justify-between text-sm text-muted-foreground"><span>VAT (15%)</span><span className="font-mono">₵{taxAmount.toFixed(2)}</span></div>
-            {orderDiscount > 0 && <div className="flex justify-between text-sm text-rose-500 font-medium"><span>Discount</span><span className="font-mono">-₵{orderDiscount.toFixed(2)}</span></div>}
+            <div className="flex justify-between text-sm text-muted-foreground">
+              <span className="flex items-center gap-1">
+                {taxRuleName}
+                {taxRules && taxRules.length > 1 && (
+                  <Select value={taxRuleName} onValueChange={(val) => {
+                    const rule = taxRules.find(r => r.name === val);
+                    if (rule) setTaxRule(rule.name, rule.rate);
+                  }}>
+                    <SelectTrigger className="h-5 w-5 p-0 border-0 shadow-none [&>svg]:size-3">
+                      <span></span>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {taxRules.map(rule => (
+                        <SelectItem key={rule.id} value={rule.name}>{rule.name} ({(rule.rate * 100).toFixed(0)}%)</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              </span>
+              <span className="font-mono">₵{taxAmount.toFixed(2)}</span>
+            </div>
+            {computedDiscount > 0 && (
+              <div className="flex justify-between text-sm text-rose-500 font-medium">
+                <span>Discount {discountType === 'percentage' ? `(${orderDiscount}%)` : ''}</span>
+                <span className="font-mono">-₵{computedDiscount.toFixed(2)}</span>
+              </div>
+            )}
             <Separator className="my-1.5" />
             <div className="flex justify-between font-black text-2xl text-primary items-baseline">
               <span>Total</span>
@@ -295,7 +541,7 @@ export default function POS() {
             <Button variant="outline" className="h-11 gap-2 font-bold border-primary/20 text-primary hover:bg-primary/5" onClick={() => handleCheckout('single', 'card')}>
               <CreditCard className="size-4" /> CARD
             </Button>
-            
+
             <Dialog open={isSplitPaymentOpen} onOpenChange={setIsSplitPaymentOpen}>
               <DialogTrigger asChild>
                 <Button variant="secondary" className="col-span-2 h-11 gap-2 font-bold bg-primary/10 text-primary hover:bg-primary/20 border-none"><Calculator className="size-4" /> SPLIT PAYMENT</Button>
@@ -308,10 +554,10 @@ export default function POS() {
                       <Label className="capitalize font-bold text-muted-foreground">{method} Amount</Label>
                       <div className="relative">
                         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-mono">₵</span>
-                        <Input 
-                          type="number" 
+                        <Input
+                          type="number"
                           className="pl-7 font-mono text-lg"
-                          value={paymentSplits[method as keyof typeof paymentSplits]} 
+                          value={paymentSplits[method as keyof typeof paymentSplits]}
                           onChange={(e) => setPaymentSplits({...paymentSplits, [method]: parseFloat(e.target.value) || 0})}
                         />
                       </div>
@@ -333,15 +579,46 @@ export default function POS() {
               </DialogContent>
             </Dialog>
 
-            <div className="col-span-2 grid grid-cols-3 gap-2 mt-2">
-              <Button variant="ghost" className="h-10 gap-2 text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100" onClick={() => handleCheckout('refund', 'cash')}>
-                <RotateCcw className="size-4" /> Refund
+            <Dialog open={isQuoteOpen} onOpenChange={setIsQuoteOpen}>
+              <DialogTrigger asChild>
+                <Button variant="secondary" className="h-10 gap-2 font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border-none"><FileText className="size-4" /> Quote</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader><DialogTitle>Create Quote</DialogTitle></DialogHeader>
+                <div className="space-y-4 py-4">
+                  <div className="space-y-2">
+                    <Label>Customer Name (Optional)</Label>
+                    <Input value={quoteName} onChange={(e) => setQuoteName(e.target.value)} placeholder="Customer name" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Notes (Optional)</Label>
+                    <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} placeholder="Any notes for this quote" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Valid For (Days)</Label>
+                    <Input type="number" value={quoteValidDays} onChange={(e) => setQuoteValidDays(e.target.value)} min="1" />
+                  </div>
+                  <div className="p-3 bg-muted/50 rounded-lg text-sm">
+                    <div className="flex justify-between"><span>Items:</span><span>{cart.length}</span></div>
+                    <div className="flex justify-between font-bold"><span>Total:</span><span>₵{finalTotal.toFixed(2)}</span></div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsQuoteOpen(false)}>Cancel</Button>
+                  <Button onClick={handleSaveQuote} disabled={cart.length === 0}>Create Quote</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+
+            <div className="grid grid-cols-3 gap-2">
+              <Button variant="ghost" className="h-10 gap-1.5 text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100 text-xs" onClick={() => handleCheckout('refund', 'cash')}>
+                <RotateCcw className="size-3.5" /> Refund
               </Button>
-              <Button variant="ghost" className="h-10 gap-2 text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-100" onClick={() => handleCheckout('return', 'cash')}>
-                <RefreshCcw className="size-4" /> Return
+              <Button variant="ghost" className="h-10 gap-1.5 text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-100 text-xs" onClick={() => handleCheckout('return', 'cash')}>
+                <RefreshCcw className="size-3.5" /> Return
               </Button>
-              <Button variant="ghost" className="h-10 gap-2 text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-100" onClick={() => handleCheckout('single', 'credit')}>
-                <UserPlus className="size-4" /> Credit
+              <Button variant="ghost" className="h-10 gap-1.5 text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-100 text-xs" onClick={() => handleCheckout('single', 'credit')}>
+                <UserPlus className="size-3.5" /> Credit
               </Button>
             </div>
           </div>

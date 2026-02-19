@@ -5,10 +5,13 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import PWAInstallPrompt from "@/components/layout/PWAInstallPrompt";
 import Dashboard from "@/pages/Dashboard";
 import POS from "@/pages/POS";
 import Transactions from "@/pages/Transactions";
 import Inventory from "@/pages/Inventory";
+import Settings from "@/pages/Settings";
+import Quotes from "@/pages/Quotes";
 
 function Router() {
   return (
@@ -18,12 +21,8 @@ function Router() {
         <Route path="/pos" component={POS}/>
         <Route path="/inventory" component={Inventory}/>
         <Route path="/transactions" component={Transactions}/>
-        <Route path="/settings">
-          <div className="flex items-center justify-center h-[50vh] text-muted-foreground flex-col gap-4">
-            <h2 className="text-2xl font-bold">Settings</h2>
-            <p>Module coming soon...</p>
-          </div>
-        </Route>
+        <Route path="/settings" component={Settings}/>
+        <Route path="/quotes" component={Quotes}/>
         <Route component={NotFound} />
       </Switch>
     </DashboardLayout>
@@ -36,6 +35,7 @@ function App() {
       <TooltipProvider>
         <Toaster />
         <Router />
+        <PWAInstallPrompt />
       </TooltipProvider>
     </QueryClientProvider>
   );

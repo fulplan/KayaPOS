@@ -51,6 +51,15 @@ export interface Batch {
   createdAt: Date;
 }
 
+export interface TaxRule {
+  id?: number;
+  name: string;
+  rate: number;
+  isDefault: boolean;
+  isActive: boolean;
+  createdAt: Date;
+}
+
 export interface OrderItem {
   productId: number;
   name: string;
@@ -64,13 +73,35 @@ export interface Order {
   items: OrderItem[];
   subtotal: number;
   tax: number;
+  taxRuleName?: string;
+  taxRate?: number;
   discount: number;
+  discountType?: 'flat' | 'percentage';
   total: number;
-  status: 'completed' | 'pending' | 'cancelled' | 'refunded';
+  status: 'completed' | 'pending' | 'cancelled' | 'refunded' | 'draft';
   paymentMethods: { method: 'cash' | 'momo' | 'card' | 'credit'; amount: number }[];
   customerId?: number;
   createdAt: Date;
   synced: boolean;
+  notes?: string;
+}
+
+export interface Quote {
+  id?: number;
+  items: OrderItem[];
+  subtotal: number;
+  tax: number;
+  taxRuleName?: string;
+  taxRate?: number;
+  discount: number;
+  discountType?: 'flat' | 'percentage';
+  total: number;
+  customerId?: number;
+  customerName?: string;
+  notes?: string;
+  validUntil?: Date;
+  status: 'active' | 'converted' | 'expired';
+  createdAt: Date;
 }
 
 export interface Customer {
@@ -87,6 +118,8 @@ export class KayaDatabase extends Dexie {
   categories!: Table<Category>;
   variants!: Table<ProductVariant>;
   batches!: Table<Batch>;
+  taxRules!: Table<TaxRule>;
+  quotes!: Table<Quote>;
 
   constructor() {
     super('KayaPOS');
@@ -112,6 +145,17 @@ export class KayaDatabase extends Dexie {
         if (!product.updatedAt) product.updatedAt = new Date();
       });
     });
+
+    this.version(4).stores({
+      products: '++id, name, category, categoryId, barcode, sku, isActive',
+      orders: '++id, status, createdAt, synced, customerId',
+      customers: '++id, name, phone',
+      categories: '++id, name',
+      variants: '++id, productId, name, sku, barcode',
+      batches: '++id, productId, variantId, batchNumber, expiryDate',
+      taxRules: '++id, name, isDefault, isActive',
+      quotes: '++id, status, createdAt, customerId'
+    });
   }
 }
 
@@ -121,6 +165,11 @@ db.on('populate', () => {
   db.categories.bulkAdd([
     { name: 'Food', description: 'Prepared meals and dishes', color: '#f97316', createdAt: new Date() },
     { name: 'Drinks', description: 'Beverages and refreshments', color: '#3b82f6', createdAt: new Date() },
+  ]);
+
+  db.taxRules.bulkAdd([
+    { name: 'VAT (15%)', rate: 0.15, isDefault: true, isActive: true, createdAt: new Date() },
+    { name: 'No Tax', rate: 0, isDefault: false, isActive: true, createdAt: new Date() },
   ]);
 
   db.products.bulkAdd([

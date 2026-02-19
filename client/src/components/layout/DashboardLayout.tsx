@@ -8,8 +8,8 @@ import {
   Wifi, 
   WifiOff, 
   Menu,
-  Bell,
-  Package
+  Package,
+  FileText
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
+import NotificationBell from "@/components/layout/NotificationBell";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -33,6 +34,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "POS Terminal", href: "/pos", icon: Store },
     { name: "Inventory", href: "/inventory", icon: Package },
     { name: "Transactions", href: "/transactions", icon: Receipt },
+    { name: "Quotes", href: "/quotes", icon: FileText },
     { name: "Settings", href: "/settings", icon: Settings },
   ];
 
@@ -120,10 +122,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               {isOffline ? "Offline Mode" : "Online"}
             </div>
             
-            <Button variant="ghost" size="icon" className="relative text-muted-foreground hover:text-foreground">
-              <Bell className="size-5" />
-              <span className="absolute top-2.5 right-2.5 size-2 bg-primary rounded-full ring-2 ring-background" />
-            </Button>
+            <NotificationBell />
           </div>
         </header>
         
