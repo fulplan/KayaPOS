@@ -37,6 +37,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
   const [barcode, setBarcode] = useState("");
   const [sku, setSku] = useState("");
   const [description, setDescription] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
   const [isActive, setIsActive] = useState(true);
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
       setBarcode(product.barcode || "");
       setSku(product.sku || "");
       setDescription(product.description || "");
+      setImageUrl(product.image || "");
       setIsActive(product.isActive);
     } else {
       setName("");
@@ -61,6 +63,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
       setBarcode("");
       setSku("");
       setDescription("");
+      setImageUrl("");
       setIsActive(true);
     }
   }, [product, open]);
@@ -90,6 +93,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
           barcode: barcode.trim() || undefined,
           sku: sku.trim() || undefined,
           description: description.trim() || undefined,
+          image: imageUrl.trim() || undefined,
           isActive,
           updatedAt: new Date(),
         });
@@ -104,6 +108,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
           barcode: barcode.trim() || undefined,
           sku: sku.trim() || undefined,
           description: description.trim() || undefined,
+          image: imageUrl.trim() || undefined,
           isActive,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -125,7 +130,7 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
         <div className="grid gap-4 py-4">
           <div className="space-y-2">
             <Label>Product Name *</Label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Jollof Rice & Chicken" />
+            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Enter product name" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -181,6 +186,16 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
           <div className="space-y-2">
             <Label>Description</Label>
             <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Optional product description" />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Image URL</Label>
+            <Input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://example.com/image.jpg (optional)" />
+            {imageUrl.trim() && (
+              <div className="mt-2 rounded-lg border overflow-hidden w-20 h-20">
+                <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-between border rounded-lg p-3">

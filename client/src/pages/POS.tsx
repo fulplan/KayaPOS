@@ -166,6 +166,17 @@ export default function POS() {
         synced: false
       });
 
+      for (const item of cart) {
+        if (item.id) {
+          const product = await db.products.get(item.id);
+          if (product) {
+            const stockChange = item.quantity * multiplier;
+            const newStock = product.stock - stockChange;
+            await db.products.update(item.id, { stock: newStock, updatedAt: new Date() });
+          }
+        }
+      }
+
       toast({
         title: isNegative ? `${type.charAt(0).toUpperCase() + type.slice(1)} Success` : "Order Success",
         description: `Total: ₵${(finalTotal * multiplier).toFixed(2)}`
@@ -340,9 +351,15 @@ export default function POS() {
                 className="cursor-pointer hover:border-primary transition-all group overflow-hidden border-border/40 shadow-sm active:scale-95"
                 onClick={() => addToCart(product)}
               >
-                <div className="aspect-square bg-muted flex items-center justify-center font-bold text-3xl opacity-10 group-hover:opacity-30 transition-opacity bg-gradient-to-br from-primary/5 to-transparent">
-                  {product.name.substring(0,2).toUpperCase()}
-                </div>
+                {product.image ? (
+                  <div className="aspect-square overflow-hidden">
+                    <img src={product.image} alt={product.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                  </div>
+                ) : (
+                  <div className="aspect-square bg-muted flex items-center justify-center font-bold text-3xl opacity-10 group-hover:opacity-30 transition-opacity bg-gradient-to-br from-primary/5 to-transparent">
+                    {product.name.substring(0,2).toUpperCase()}
+                  </div>
+                )}
                 <div className="p-3">
                   <h3 className="font-bold text-sm truncate group-hover:text-primary transition-colors">{product.name}</h3>
                   <div className="flex justify-between items-center mt-1">
@@ -471,9 +488,15 @@ export default function POS() {
           ) : (
             cart.map((item) => (
               <div key={item.id} className="flex gap-3 mb-6 group animate-in slide-in-from-right-4 duration-200">
-                <div className="size-12 rounded-lg bg-muted flex items-center justify-center font-bold text-muted-foreground/40 shrink-0">
-                  {item.name.substring(0,2).toUpperCase()}
-                </div>
+                {item.image ? (
+                  <div className="size-12 rounded-lg overflow-hidden shrink-0">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                  </div>
+                ) : (
+                  <div className="size-12 rounded-lg bg-muted flex items-center justify-center font-bold text-muted-foreground/40 shrink-0">
+                    {item.name.substring(0,2).toUpperCase()}
+                  </div>
+                )}
                 <div className="flex-1 min-w-0">
                   <h4 className="font-bold text-sm truncate">{item.name}</h4>
                   <div className="flex items-center gap-3 mt-1.5">
@@ -583,24 +606,43 @@ export default function POS() {
               <DialogTrigger asChild>
                 <Button variant="secondary" className="h-10 gap-2 font-bold text-indigo-600 bg-indigo-50 hover:bg-indigo-100 border-none"><FileText className="size-4" /> Quote</Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="max-w-md">
                 <DialogHeader><DialogTitle>Create Quote</DialogTitle></DialogHeader>
                 <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label>Customer Name (Optional)</Label>
-                    <Input value={quoteName} onChange={(e) => setQuoteName(e.target.value)} placeholder="Customer name" />
+                  {cart.length > 0 && (
+                    <div className="border rounded-lg divide-y max-h-[200px] overflow-y-auto">
+                      {cart.map((item) => (
+                        <div key={item.id} className="flex justify-between items-center p-2.5 text-sm">
+                          <div>
+                            <span className="font-medium">{item.name}</span>
+                            <span className="text-muted-foreground ml-2">x{item.quantity}</span>
+                          </div>
+                          <span className="font-mono text-sm">₵{((item.price - item.discount) * item.quantity).toFixed(2)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <Label>Customer Name</Label>
+                      <Input value={quoteName} onChange={(e) => setQuoteName(e.target.value)} placeholder="Optional" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Valid For (Days)</Label>
+                      <Input type="number" value={quoteValidDays} onChange={(e) => setQuoteValidDays(e.target.value)} min="1" />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label>Notes (Optional)</Label>
-                    <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} placeholder="Any notes for this quote" />
+                    <Label>Notes</Label>
+                    <Input value={quoteNotes} onChange={(e) => setQuoteNotes(e.target.value)} placeholder="Optional notes for this quote" />
                   </div>
-                  <div className="space-y-2">
-                    <Label>Valid For (Days)</Label>
-                    <Input type="number" value={quoteValidDays} onChange={(e) => setQuoteValidDays(e.target.value)} min="1" />
-                  </div>
-                  <div className="p-3 bg-muted/50 rounded-lg text-sm">
-                    <div className="flex justify-between"><span>Items:</span><span>{cart.length}</span></div>
-                    <div className="flex justify-between font-bold"><span>Total:</span><span>₵{finalTotal.toFixed(2)}</span></div>
+                  <div className="p-3 bg-muted/50 rounded-lg text-sm space-y-1">
+                    <div className="flex justify-between text-muted-foreground"><span>Subtotal</span><span className="font-mono">₵{subtotal.toFixed(2)}</span></div>
+                    <div className="flex justify-between text-muted-foreground"><span>Tax ({taxRuleName})</span><span className="font-mono">₵{taxAmount.toFixed(2)}</span></div>
+                    {computedDiscount > 0 && (
+                      <div className="flex justify-between text-rose-500"><span>Discount</span><span className="font-mono">-₵{computedDiscount.toFixed(2)}</span></div>
+                    )}
+                    <div className="flex justify-between font-bold text-base border-t pt-1.5 mt-1.5"><span>Total</span><span className="font-mono">₵{finalTotal.toFixed(2)}</span></div>
                   </div>
                 </div>
                 <DialogFooter>

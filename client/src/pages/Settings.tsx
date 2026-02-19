@@ -32,7 +32,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Edit, Trash2, Receipt, MoreHorizontal } from "lucide-react";
+import { Plus, Edit, Trash2, Receipt, MoreHorizontal, Cloud, RefreshCw } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -40,9 +40,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
+import { syncAll } from "@/lib/sync";
 
 export default function Settings() {
   const taxRules = useLiveQuery(() => db.taxRules.toArray());
+  const [isSyncing, setIsSyncing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<TaxRule | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<TaxRule | null>(null);
@@ -234,6 +236,45 @@ export default function Settings() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Cloud className="size-5" /> Data Sync
+          </CardTitle>
+          <CardDescription>Sync your local data to the server for backup and multi-device access</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={async () => {
+                setIsSyncing(true);
+                try {
+                  const result = await syncAll();
+                  if (result.errors.length > 0) {
+                    toast({ title: "Sync Partial", description: `Some items failed: ${result.errors.join(', ')}`, variant: "destructive" });
+                  } else {
+                    const totalSynced = (result.products?.synced || 0) + (result.orders?.synced || 0) + (result.customers?.synced || 0);
+                    toast({ title: "Sync Complete", description: `${totalSynced} items synced to server` });
+                  }
+                } catch {
+                  toast({ title: "Sync Failed", description: "Could not connect to server. Data is saved locally.", variant: "destructive" });
+                } finally {
+                  setIsSyncing(false);
+                }
+              }}
+              disabled={isSyncing}
+              className="gap-2"
+            >
+              <RefreshCw className={`size-4 ${isSyncing ? 'animate-spin' : ''}`} />
+              {isSyncing ? 'Syncing...' : 'Sync Now'}
+            </Button>
+            <p className="text-sm text-muted-foreground">
+              Data syncs automatically every 60 seconds when online.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
 
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
