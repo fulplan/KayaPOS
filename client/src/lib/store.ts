@@ -3,6 +3,7 @@ import { type Product } from './db';
 
 export interface CartItem extends Product {
   quantity: number;
+  discount: number; // flat discount per unit
 }
 
 interface StoreState {
@@ -10,14 +11,20 @@ interface StoreState {
   addToCart: (product: Product) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
+  updateItemDiscount: (productId: number, discount: number) => void;
   clearCart: () => void;
   isOffline: boolean;
   setOfflineStatus: (status: boolean) => void;
+  taxRate: number;
+  orderDiscount: number; // flat order-level discount
+  setOrderDiscount: (discount: number) => void;
 }
 
 export const useStore = create<StoreState>((set) => ({
   cart: [],
   isOffline: !navigator.onLine,
+  taxRate: 0.15, // Default 15% VAT
+  orderDiscount: 0,
   
   addToCart: (product) => set((state) => {
     const existing = state.cart.find(p => p.id === product.id);
@@ -30,7 +37,7 @@ export const useStore = create<StoreState>((set) => ({
         )
       };
     }
-    return { cart: [...state.cart, { ...product, quantity: 1 }] };
+    return { cart: [...state.cart, { ...product, quantity: 1, discount: 0 }] };
   }),
 
   removeFromCart: (productId) => set((state) => ({
@@ -45,8 +52,14 @@ export const useStore = create<StoreState>((set) => ({
     ).filter(p => p.quantity > 0)
   })),
 
-  clearCart: () => set({ cart: [] }),
+  updateItemDiscount: (productId, discount) => set((state) => ({
+    cart: state.cart.map(p => 
+      p.id === productId ? { ...p, discount } : p
+    )
+  })),
 
+  clearCart: () => set({ cart: [], orderDiscount: 0 }),
+  setOrderDiscount: (discount) => set({ orderDiscount: discount }),
   setOfflineStatus: (status) => set({ isOffline: status }),
 }));
 

@@ -24,7 +24,7 @@ export default function Transactions() {
 
   const filteredOrders = orders?.filter(order => 
     order.id?.toString().includes(searchQuery) ||
-    order.paymentMethod.toLowerCase().includes(searchQuery.toLowerCase())
+    order.paymentMethods.some(pm => pm.method.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
   return (
@@ -59,7 +59,7 @@ export default function Transactions() {
               <TableRow>
                 <TableHead className="w-[100px]">Order ID</TableHead>
                 <TableHead>Date & Time</TableHead>
-                <TableHead>Payment Method</TableHead>
+                <TableHead>Payment Methods</TableHead>
                 <TableHead>Items</TableHead>
                 <TableHead className="text-right">Total Amount</TableHead>
                 <TableHead className="text-right">Sync Status</TableHead>
@@ -72,10 +72,12 @@ export default function Transactions() {
                   <TableCell>
                     {format(new Date(order.createdAt), 'MMM d, yyyy h:mm a')}
                   </TableCell>
-                  <TableCell className="capitalize">
-                    <Badge variant="outline" className="capitalize">
-                      {order.paymentMethod}
-                    </Badge>
+                  <TableCell className="capitalize flex gap-1 flex-wrap">
+                    {order.paymentMethods.map((pm, i) => (
+                      <Badge key={i} variant="outline" className="capitalize text-[10px]">
+                        {pm.method}: ₵{pm.amount.toFixed(2)}
+                      </Badge>
+                    ))}
                   </TableCell>
                   <TableCell>{order.items.length} items</TableCell>
                   <TableCell className="text-right font-bold">

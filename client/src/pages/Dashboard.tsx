@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { useStore } from "@/lib/store";
-import { db, type Order } from "@/lib/db";
+import { db } from "@/lib/db";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { 
   DollarSign, 
@@ -54,7 +53,7 @@ export default function Dashboard() {
       setTotalOrders(allOrders.length);
     };
     fetchStats();
-  }, [orders]); // Refresh when orders change
+  }, [orders]); 
 
   return (
     <div className="space-y-6">
@@ -196,7 +195,7 @@ export default function Dashboard() {
                     <TableCell>₵{order.total.toFixed(2)}</TableCell>
                     <TableCell className="text-right">
                       <Badge variant="outline" className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-                        {order.paymentMethod}
+                        {order.paymentMethods[0]?.method || 'N/A'}
                       </Badge>
                     </TableCell>
                   </TableRow>
