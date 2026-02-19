@@ -8,7 +8,8 @@ import {
   Wifi, 
   WifiOff, 
   Menu,
-  Bell
+  Bell,
+  Package
 } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -30,6 +31,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "POS Terminal", href: "/pos", icon: Store },
+    { name: "Inventory", href: "/inventory", icon: Package },
     { name: "Transactions", href: "/transactions", icon: Receipt },
     { name: "Settings", href: "/settings", icon: Settings },
   ];

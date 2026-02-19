@@ -8,6 +8,7 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import Dashboard from "@/pages/Dashboard";
 import POS from "@/pages/POS";
 import Transactions from "@/pages/Transactions";
+import Inventory from "@/pages/Inventory";
 
 function Router() {
   return (
@@ -15,6 +16,7 @@ function Router() {
       <Switch>
         <Route path="/" component={Dashboard}/>
         <Route path="/pos" component={POS}/>
+        <Route path="/inventory" component={Inventory}/>
         <Route path="/transactions" component={Transactions}/>
         <Route path="/settings">
           <div className="flex items-center justify-center h-[50vh] text-muted-foreground flex-col gap-4">

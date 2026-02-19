@@ -46,5 +46,11 @@ script/          - Build scripts
 - `npm run start` - Production server
 - `npm run db:push` - Push schema to database
 
+### Data Storage
+- Primary data (products, orders, customers, categories, variants, batches) stored in Dexie (IndexedDB) for offline-first capability
+- Dexie schema version 3 includes: products, orders, customers, categories, variants, batches tables
+- PostgreSQL available via Drizzle ORM for server-side needs (users table)
+
 ## Recent Changes
+- 2026-02-19: Added full Inventory Management module (product CRUD, categories, variants, batch tracking, expiry tracking, low stock alerts)
 - 2026-02-19: Initial setup in Replit environment, database provisioned, dependencies installed
