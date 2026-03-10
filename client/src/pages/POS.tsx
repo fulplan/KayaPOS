@@ -79,16 +79,6 @@ export default function POS() {
     credit: 0
   });
 
-  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
-  const isPharmacy = businessSettings?.businessType === 'pharmacy';
-  const rxItemsInCart = isPharmacy ? cart.filter(item => item.requiresPrescription) : [];
-
-  const barcodeBuffer = useRef("");
-  const lastKeyTime = useRef(0);
-
-  const products = useLiveQuery(() => db.products.toArray().then(ps => ps.filter(p => p.isActive !== false)));
-  const taxRules = useLiveQuery(() => db.taxRules.toArray().then(rs => rs.filter(r => r.isActive !== false)));
-  const drafts = useLiveQuery(() => db.orders.where('status').equals('draft').toArray());
   const {
     cart,
     addToCart,
@@ -103,6 +93,17 @@ export default function POS() {
     discountType,
     setOrderDiscount
   } = useStore();
+
+  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
+  const isPharmacy = businessSettings?.businessType === 'pharmacy';
+  const rxItemsInCart = isPharmacy ? cart.filter(item => item.requiresPrescription) : [];
+
+  const barcodeBuffer = useRef("");
+  const lastKeyTime = useRef(0);
+
+  const products = useLiveQuery(() => db.products.toArray().then(ps => ps.filter(p => p.isActive !== false)));
+  const taxRules = useLiveQuery(() => db.taxRules.toArray().then(rs => rs.filter(r => r.isActive !== false)));
+  const drafts = useLiveQuery(() => db.orders.where('status').equals('draft').toArray());
 
   useEffect(() => {
     const loadDefaultTax = async () => {
