@@ -7,6 +7,10 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
+  fullName: text("full_name").notNull().default(""),
+  role: text("role").notNull().default("cashier"),
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const syncedProducts = pgTable("synced_products", {
@@ -22,6 +26,12 @@ export const syncedProducts = pgTable("synced_products", {
   image: text("image"),
   description: text("description"),
   isActive: boolean("is_active").notNull().default(true),
+  dosageForm: text("dosage_form"),
+  strength: text("strength"),
+  requiresPrescription: boolean("requires_prescription").default(false),
+  manufacturer: text("manufacturer"),
+  serviceTime: integer("service_time"),
+  servingSize: text("serving_size"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -52,9 +62,29 @@ export const syncedCustomers = pgTable("synced_customers", {
   balance: numeric("balance", { precision: 10, scale: 2 }).notNull().default("0"),
 });
 
+export const syncedBusinessSettings = pgTable("synced_business_settings", {
+  id: serial("id").primaryKey(),
+  businessName: text("business_name").notNull().default(""),
+  address: text("address"),
+  phone: text("phone"),
+  email: text("email"),
+  logo: text("logo"),
+  businessType: text("business_type").notNull().default("retail"),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const sessions = pgTable("sessions", {
+  sid: varchar("sid").primaryKey(),
+  sess: jsonb("sess").notNull(),
+  expire: timestamp("expire", { precision: 6 }).notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
+}).extend({
+  fullName: z.string().optional(),
+  role: z.enum(["admin", "manager", "cashier"]).optional(),
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

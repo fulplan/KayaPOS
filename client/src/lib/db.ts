@@ -21,6 +21,12 @@ export interface Product {
   image?: string;
   description?: string;
   isActive: boolean;
+  dosageForm?: string;
+  strength?: string;
+  requiresPrescription?: boolean;
+  manufacturer?: string;
+  serviceTime?: number;
+  servingSize?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -111,6 +117,17 @@ export interface Customer {
   balance: number;
 }
 
+export interface BusinessSettings {
+  id?: number;
+  businessName: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  logo?: string;
+  businessType: 'pharmacy' | 'salon' | 'restaurant' | 'retail' | 'wholesale' | 'other';
+  updatedAt: Date;
+}
+
 export class KayaDatabase extends Dexie {
   products!: Table<Product>;
   orders!: Table<Order>;
@@ -120,6 +137,7 @@ export class KayaDatabase extends Dexie {
   batches!: Table<Batch>;
   taxRules!: Table<TaxRule>;
   quotes!: Table<Quote>;
+  businessSettings!: Table<BusinessSettings>;
 
   constructor() {
     super('KayaPOS');
@@ -156,6 +174,21 @@ export class KayaDatabase extends Dexie {
       taxRules: '++id, name, isDefault, isActive',
       quotes: '++id, status, createdAt, customerId'
     });
+
+    this.version(5).stores({
+      products: '++id, name, category, categoryId, barcode, sku, isActive',
+      orders: '++id, status, createdAt, synced, customerId',
+      customers: '++id, name, phone',
+      categories: '++id, name',
+      variants: '++id, productId, name, sku, barcode',
+      batches: '++id, productId, variantId, batchNumber, expiryDate',
+      taxRules: '++id, name, isDefault, isActive',
+      quotes: '++id, status, createdAt, customerId',
+      businessSettings: '++id'
+    }).upgrade(async trans => {
+      const categories = trans.table('categories');
+      await categories.where('name').anyOf(['Food', 'Drinks', 'food', 'drinks']).delete();
+    });
   }
 }
 
@@ -170,4 +203,19 @@ db.on('populate', () => {
     { name: 'VAT (15%)', rate: 0.15, isDefault: true, isActive: true, createdAt: new Date() },
     { name: 'No Tax', rate: 0, isDefault: false, isActive: true, createdAt: new Date() },
   ]);
+
+  db.businessSettings.add({
+    businessName: '',
+    businessType: 'retail',
+    updatedAt: new Date(),
+  });
 });
+
+export async function checkDatabaseHealth(): Promise<boolean> {
+  try {
+    await db.products.count();
+    return true;
+  } catch {
+    return false;
+  }
+}

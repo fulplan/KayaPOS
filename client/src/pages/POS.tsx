@@ -26,7 +26,8 @@ import {
   Save,
   FileText,
   FolderOpen,
-  X
+  X,
+  AlertTriangle
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -37,6 +38,16 @@ import {
   DialogFooter,
   DialogTrigger
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import {
@@ -59,12 +70,18 @@ export default function POS() {
   const [quoteName, setQuoteName] = useState("");
   const [quoteNotes, setQuoteNotes] = useState("");
   const [quoteValidDays, setQuoteValidDays] = useState("30");
+  const [rxWarningOpen, setRxWarningOpen] = useState(false);
+  const [pendingCheckout, setPendingCheckout] = useState<{ type: 'single' | 'split' | 'refund' | 'return'; method?: 'cash' | 'momo' | 'card' | 'credit' } | null>(null);
   const [paymentSplits, setPaymentSplits] = useState({
     cash: 0,
     card: 0,
     momo: 0,
     credit: 0
   });
+
+  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
+  const isPharmacy = businessSettings?.businessType === 'pharmacy';
+  const rxItemsInCart = isPharmacy ? cart.filter(item => item.requiresPrescription) : [];
 
   const barcodeBuffer = useRef("");
   const lastKeyTime = useRef(0);
@@ -132,6 +149,18 @@ export default function POS() {
     : orderDiscount;
   const finalTotal = Math.max(0, subtotal + taxAmount - computedDiscount);
 
+  const initiateCheckout = (type: 'single' | 'split' | 'refund' | 'return', method?: 'cash' | 'momo' | 'card' | 'credit') => {
+    if (cart.length === 0) return;
+
+    if (isPharmacy && rxItemsInCart.length > 0 && type !== 'refund' && type !== 'return') {
+      setPendingCheckout({ type, method });
+      setRxWarningOpen(true);
+      return;
+    }
+
+    handleCheckout(type, method);
+  };
+
   const handleCheckout = async (type: 'single' | 'split' | 'refund' | 'return', method?: 'cash' | 'momo' | 'card' | 'credit') => {
     if (cart.length === 0) return;
 
@@ -145,37 +174,39 @@ export default function POS() {
           .map(([m, amt]) => ({ method: m as any, amount: amt }));
 
     try {
-      await db.orders.add({
-        items: cart.map(item => ({
-          productId: item.id!,
-          name: item.name,
-          price: item.price,
-          quantity: item.quantity * multiplier,
-          discount: item.discount
-        })),
-        subtotal: subtotal * multiplier,
-        tax: taxAmount * multiplier,
-        taxRuleName,
-        taxRate,
-        discount: computedDiscount * multiplier,
-        discountType,
-        total: finalTotal * multiplier,
-        status: isNegative ? (type === 'refund' ? 'refunded' : 'cancelled') : 'completed',
-        paymentMethods: payments,
-        createdAt: new Date(),
-        synced: false
-      });
+      await db.transaction('rw', [db.orders, db.products], async () => {
+        await db.orders.add({
+          items: cart.map(item => ({
+            productId: item.id!,
+            name: item.name,
+            price: item.price,
+            quantity: item.quantity * multiplier,
+            discount: item.discount
+          })),
+          subtotal: subtotal * multiplier,
+          tax: taxAmount * multiplier,
+          taxRuleName,
+          taxRate,
+          discount: computedDiscount * multiplier,
+          discountType,
+          total: finalTotal * multiplier,
+          status: isNegative ? (type === 'refund' ? 'refunded' : 'cancelled') : 'completed',
+          paymentMethods: payments,
+          createdAt: new Date(),
+          synced: false
+        });
 
-      for (const item of cart) {
-        if (item.id) {
-          const product = await db.products.get(item.id);
-          if (product) {
-            const stockChange = item.quantity * multiplier;
-            const newStock = product.stock - stockChange;
-            await db.products.update(item.id, { stock: newStock, updatedAt: new Date() });
+        for (const item of cart) {
+          if (item.id) {
+            const product = await db.products.get(item.id);
+            if (product) {
+              const stockChange = item.quantity * multiplier;
+              const newStock = product.stock - stockChange;
+              await db.products.update(item.id, { stock: newStock, updatedAt: new Date() });
+            }
           }
         }
-      }
+      });
 
       toast({
         title: isNegative ? `${type.charAt(0).toUpperCase() + type.slice(1)} Success` : "Order Success",
@@ -184,7 +215,7 @@ export default function POS() {
       clearCart();
       setIsSplitPaymentOpen(false);
     } catch (e) {
-      toast({ title: "Error", variant: "destructive", description: "Transaction failed" });
+      toast({ title: "Error", variant: "destructive", description: "Transaction failed. No data was changed." });
     }
   };
 
@@ -364,7 +395,12 @@ export default function POS() {
                   <h3 className="font-bold text-sm truncate group-hover:text-primary transition-colors">{product.name}</h3>
                   <div className="flex justify-between items-center mt-1">
                     <span className="font-extrabold text-primary text-base">₵{product.price.toFixed(2)}</span>
-                    <Badge variant="secondary" className="text-[10px] font-mono px-1.5">{product.stock}</Badge>
+                    <div className="flex items-center gap-1">
+                      {isPharmacy && product.requiresPrescription && (
+                        <Badge className="bg-amber-500/10 text-amber-600 border-amber-500/20 text-[10px] px-1">Rx</Badge>
+                      )}
+                      <Badge variant="secondary" className="text-[10px] font-mono px-1.5">{product.stock}</Badge>
+                    </div>
                   </div>
                 </div>
               </Card>
@@ -555,13 +591,13 @@ export default function POS() {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <Button className="col-span-2 h-14 gap-3 text-xl font-black shadow-lg shadow-primary/20 transition-transform active:scale-95" onClick={() => handleCheckout('single', 'cash')}>
+            <Button className="col-span-2 h-14 gap-3 text-xl font-black shadow-lg shadow-primary/20 transition-transform active:scale-95" onClick={() => initiateCheckout('single', 'cash')}>
               <Banknote className="size-6" /> PAY CASH
             </Button>
-            <Button variant="outline" className="h-11 gap-2 font-bold border-primary/20 text-primary hover:bg-primary/5" onClick={() => handleCheckout('single', 'momo')}>
+            <Button variant="outline" className="h-11 gap-2 font-bold border-primary/20 text-primary hover:bg-primary/5" onClick={() => initiateCheckout('single', 'momo')}>
               <Smartphone className="size-4" /> MOMO
             </Button>
-            <Button variant="outline" className="h-11 gap-2 font-bold border-primary/20 text-primary hover:bg-primary/5" onClick={() => handleCheckout('single', 'card')}>
+            <Button variant="outline" className="h-11 gap-2 font-bold border-primary/20 text-primary hover:bg-primary/5" onClick={() => initiateCheckout('single', 'card')}>
               <CreditCard className="size-4" /> CARD
             </Button>
 
@@ -597,7 +633,7 @@ export default function POS() {
                   </div>
                 </div>
                 <DialogFooter>
-                  <Button className="w-full h-12 text-lg font-bold" onClick={() => handleCheckout('split')} disabled={(paymentSplits.cash + paymentSplits.card + paymentSplits.momo + paymentSplits.credit).toFixed(2) !== finalTotal.toFixed(2)}>Confirm Split Payment</Button>
+                  <Button className="w-full h-12 text-lg font-bold" onClick={() => initiateCheckout('split')} disabled={(paymentSplits.cash + paymentSplits.card + paymentSplits.momo + paymentSplits.credit).toFixed(2) !== finalTotal.toFixed(2)}>Confirm Split Payment</Button>
                 </DialogFooter>
               </DialogContent>
             </Dialog>
@@ -653,19 +689,55 @@ export default function POS() {
             </Dialog>
 
             <div className="grid grid-cols-3 gap-2">
-              <Button variant="ghost" className="h-10 gap-1.5 text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100 text-xs" onClick={() => handleCheckout('refund', 'cash')}>
+              <Button variant="ghost" className="h-10 gap-1.5 text-rose-500 hover:bg-rose-50 border border-transparent hover:border-rose-100 text-xs" onClick={() => initiateCheckout('refund', 'cash')}>
                 <RotateCcw className="size-3.5" /> Refund
               </Button>
-              <Button variant="ghost" className="h-10 gap-1.5 text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-100 text-xs" onClick={() => handleCheckout('return', 'cash')}>
+              <Button variant="ghost" className="h-10 gap-1.5 text-amber-600 hover:bg-amber-50 border border-transparent hover:border-amber-100 text-xs" onClick={() => initiateCheckout('return', 'cash')}>
                 <RefreshCcw className="size-3.5" /> Return
               </Button>
-              <Button variant="ghost" className="h-10 gap-1.5 text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-100 text-xs" onClick={() => handleCheckout('single', 'credit')}>
+              <Button variant="ghost" className="h-10 gap-1.5 text-indigo-600 hover:bg-indigo-50 border border-transparent hover:border-indigo-100 text-xs" onClick={() => initiateCheckout('single', 'credit')}>
                 <UserPlus className="size-3.5" /> Credit
               </Button>
             </div>
           </div>
         </div>
       </Card>
+
+      <AlertDialog open={rxWarningOpen} onOpenChange={setRxWarningOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2 text-amber-600">
+              <AlertTriangle className="size-5" /> Prescription Required
+            </AlertDialogTitle>
+            <AlertDialogDescription className="space-y-3">
+              <span>The following items require a prescription:</span>
+              <ul className="list-disc pl-5 space-y-1">
+                {rxItemsInCart.map(item => (
+                  <li key={item.id} className="font-medium text-foreground">
+                    {item.name} {item.strength ? `(${item.strength})` : ''} x{item.quantity}
+                  </li>
+                ))}
+              </ul>
+              <span className="block">Please verify that a valid prescription has been provided before completing this sale.</span>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => { setRxWarningOpen(false); setPendingCheckout(null); }}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-amber-600 hover:bg-amber-700"
+              onClick={() => {
+                setRxWarningOpen(false);
+                if (pendingCheckout) {
+                  handleCheckout(pendingCheckout.type, pendingCheckout.method);
+                  setPendingCheckout(null);
+                }
+              }}
+            >
+              Prescription Verified — Proceed
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

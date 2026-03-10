@@ -1,22 +1,16 @@
 import { useEffect, useState } from "react";
 import { db, type Product, type Category } from "@/lib/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
+import { Separator } from "@/components/ui/separator";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 
@@ -27,7 +21,14 @@ interface ProductDialogProps {
   categories: Category[];
 }
 
+const DOSAGE_FORMS = [
+  "Tablet", "Capsule", "Syrup", "Cream", "Ointment", "Injection", "Drops", "Inhaler", "Powder", "Other"
+];
+
 export default function ProductDialog({ open, onOpenChange, product, categories }: ProductDialogProps) {
+  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
+  const businessType = businessSettings?.businessType || "retail";
+
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
@@ -39,6 +40,13 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
   const [description, setDescription] = useState("");
   const [imageUrl, setImageUrl] = useState("");
   const [isActive, setIsActive] = useState(true);
+
+  const [dosageForm, setDosageForm] = useState("");
+  const [strength, setStrength] = useState("");
+  const [requiresPrescription, setRequiresPrescription] = useState(false);
+  const [manufacturer, setManufacturer] = useState("");
+  const [serviceTime, setServiceTime] = useState("");
+  const [servingSize, setServingSize] = useState("");
 
   useEffect(() => {
     if (product) {
@@ -53,6 +61,12 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
       setDescription(product.description || "");
       setImageUrl(product.image || "");
       setIsActive(product.isActive);
+      setDosageForm(product.dosageForm || "");
+      setStrength(product.strength || "");
+      setRequiresPrescription(product.requiresPrescription || false);
+      setManufacturer(product.manufacturer || "");
+      setServiceTime(product.serviceTime?.toString() || "");
+      setServingSize(product.servingSize || "");
     } else {
       setName("");
       setPrice("");
@@ -65,6 +79,12 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
       setDescription("");
       setImageUrl("");
       setIsActive(true);
+      setDosageForm("");
+      setStrength("");
+      setRequiresPrescription(false);
+      setManufacturer("");
+      setServiceTime("");
+      setServingSize("");
     }
   }, [product, open]);
 
@@ -83,36 +103,34 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
     }
 
     try {
+      const productData: Partial<Product> = {
+        name: name.trim(),
+        price: parseFloat(price),
+        category: finalCategory,
+        stock: parseInt(stock) || 0,
+        lowStockThreshold: parseInt(lowStockThreshold) || 10,
+        barcode: barcode.trim() || undefined,
+        sku: sku.trim() || undefined,
+        description: description.trim() || undefined,
+        image: imageUrl.trim() || undefined,
+        isActive,
+        dosageForm: dosageForm || undefined,
+        strength: strength.trim() || undefined,
+        requiresPrescription,
+        manufacturer: manufacturer.trim() || undefined,
+        serviceTime: serviceTime ? parseInt(serviceTime) : undefined,
+        servingSize: servingSize.trim() || undefined,
+        updatedAt: new Date(),
+      };
+
       if (product?.id) {
-        await db.products.update(product.id, {
-          name: name.trim(),
-          price: parseFloat(price),
-          category: finalCategory,
-          stock: parseInt(stock) || 0,
-          lowStockThreshold: parseInt(lowStockThreshold) || 10,
-          barcode: barcode.trim() || undefined,
-          sku: sku.trim() || undefined,
-          description: description.trim() || undefined,
-          image: imageUrl.trim() || undefined,
-          isActive,
-          updatedAt: new Date(),
-        });
+        await db.products.update(product.id, productData);
         toast({ title: "Product Updated", description: name });
       } else {
         await db.products.add({
-          name: name.trim(),
-          price: parseFloat(price),
-          category: finalCategory,
-          stock: parseInt(stock) || 0,
-          lowStockThreshold: parseInt(lowStockThreshold) || 10,
-          barcode: barcode.trim() || undefined,
-          sku: sku.trim() || undefined,
-          description: description.trim() || undefined,
-          image: imageUrl.trim() || undefined,
-          isActive,
+          ...productData,
           createdAt: new Date(),
-          updatedAt: new Date(),
-        });
+        } as Product);
         toast({ title: "Product Created", description: name });
       }
       onOpenChange(false);
@@ -197,6 +215,65 @@ export default function ProductDialog({ open, onOpenChange, product, categories 
               </div>
             )}
           </div>
+
+          {businessType === "pharmacy" && (
+            <>
+              <Separator />
+              <p className="text-sm font-medium text-muted-foreground">Pharmacy Details</p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Dosage Form</Label>
+                  <Select value={dosageForm} onValueChange={setDosageForm}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select form" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {DOSAGE_FORMS.map(form => (
+                        <SelectItem key={form} value={form}>{form}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Strength</Label>
+                  <Input value={strength} onChange={(e) => setStrength(e.target.value)} placeholder="e.g. 500mg, 10ml" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Manufacturer</Label>
+                <Input value={manufacturer} onChange={(e) => setManufacturer(e.target.value)} placeholder="Optional" />
+              </div>
+              <div className="flex items-center justify-between border rounded-lg p-3">
+                <div>
+                  <Label>Prescription Required</Label>
+                  <p className="text-xs text-muted-foreground">Shows Rx badge and warns during checkout</p>
+                </div>
+                <Switch checked={requiresPrescription} onCheckedChange={setRequiresPrescription} />
+              </div>
+            </>
+          )}
+
+          {businessType === "salon" && (
+            <>
+              <Separator />
+              <p className="text-sm font-medium text-muted-foreground">Salon Details</p>
+              <div className="space-y-2">
+                <Label>Service Time (minutes)</Label>
+                <Input type="number" value={serviceTime} onChange={(e) => setServiceTime(e.target.value)} placeholder="e.g. 30, 60" min="0" />
+              </div>
+            </>
+          )}
+
+          {businessType === "restaurant" && (
+            <>
+              <Separator />
+              <p className="text-sm font-medium text-muted-foreground">Restaurant Details</p>
+              <div className="space-y-2">
+                <Label>Serving Size</Label>
+                <Input value={servingSize} onChange={(e) => setServingSize(e.target.value)} placeholder="e.g. 1 plate, 500ml" />
+              </div>
+            </>
+          )}
 
           <div className="flex items-center justify-between border rounded-lg p-3">
             <div>

@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { db, type TaxRule } from "@/lib/db";
+import { useState, useEffect } from "react";
+import { db, type TaxRule, type BusinessSettings } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,43 +7,49 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Plus, Edit, Trash2, Receipt, MoreHorizontal, Cloud, RefreshCw } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
+import { Plus, Edit, Trash2, Receipt, MoreHorizontal, Cloud, RefreshCw, Building2, Tags } from "lucide-react";
+import {
+  DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/hooks/use-toast";
 import { syncAll } from "@/lib/sync";
 
+const BUSINESS_TYPES = [
+  { value: "pharmacy", label: "Pharmacy" },
+  { value: "salon", label: "Salon / Beauty" },
+  { value: "restaurant", label: "Restaurant / Food" },
+  { value: "retail", label: "Retail / Mini Mart" },
+  { value: "wholesale", label: "Wholesale" },
+  { value: "other", label: "Other" },
+];
+
+const SUGGESTED_CATEGORIES: Record<string, string[]> = {
+  pharmacy: ["Antibiotics", "Pain Relief", "Vitamins & Supplements", "First Aid", "Skin Care", "Prescription Drugs", "OTC Medicines", "Baby Care"],
+  salon: ["Hair Care", "Skin Care", "Nails", "Makeup", "Products", "Accessories"],
+  restaurant: ["Appetizers", "Main Course", "Beverages", "Desserts", "Sides", "Specials"],
+  retail: ["General", "Electronics", "Clothing", "Household", "Groceries", "Stationery"],
+  wholesale: ["General", "Bulk Items", "Industrial", "Office Supplies"],
+  other: ["General"],
+};
+
 export default function Settings() {
   const taxRules = useLiveQuery(() => db.taxRules.toArray());
+  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
+  const existingCategories = useLiveQuery(() => db.categories.toArray());
   const [isSyncing, setIsSyncing] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRule, setEditingRule] = useState<TaxRule | null>(null);
@@ -53,6 +59,24 @@ export default function Settings() {
   const [rate, setRate] = useState("");
   const [isDefault, setIsDefault] = useState(false);
   const [isActive, setIsActive] = useState(true);
+
+  const [bizName, setBizName] = useState("");
+  const [bizAddress, setBizAddress] = useState("");
+  const [bizPhone, setBizPhone] = useState("");
+  const [bizEmail, setBizEmail] = useState("");
+  const [bizLogo, setBizLogo] = useState("");
+  const [bizType, setBizType] = useState<string>("retail");
+
+  useEffect(() => {
+    if (businessSettings) {
+      setBizName(businessSettings.businessName || "");
+      setBizAddress(businessSettings.address || "");
+      setBizPhone(businessSettings.phone || "");
+      setBizEmail(businessSettings.email || "");
+      setBizLogo(businessSettings.logo || "");
+      setBizType(businessSettings.businessType || "retail");
+    }
+  }, [businessSettings]);
 
   const openDialog = (rule: TaxRule | null) => {
     setEditingRule(rule);
@@ -122,12 +146,105 @@ export default function Settings() {
     setDeleteTarget(null);
   };
 
+  const handleSaveBusinessSettings = async () => {
+    try {
+      const existing = await db.businessSettings.toCollection().first();
+      const data: BusinessSettings = {
+        businessName: bizName.trim(),
+        address: bizAddress.trim() || undefined,
+        phone: bizPhone.trim() || undefined,
+        email: bizEmail.trim() || undefined,
+        logo: bizLogo.trim() || undefined,
+        businessType: bizType as BusinessSettings['businessType'],
+        updatedAt: new Date(),
+      };
+
+      if (existing?.id) {
+        await db.businessSettings.update(existing.id, data);
+      } else {
+        await db.businessSettings.add(data);
+      }
+      toast({ title: "Business Profile Saved" });
+    } catch {
+      toast({ title: "Error", description: "Failed to save.", variant: "destructive" });
+    }
+  };
+
+  const handleAddSuggestedCategories = async () => {
+    const suggestions = SUGGESTED_CATEGORIES[bizType] || SUGGESTED_CATEGORIES.other;
+    const existingNames = new Set((existingCategories || []).map(c => c.name.toLowerCase()));
+    const toAdd = suggestions.filter(s => !existingNames.has(s.toLowerCase()));
+
+    if (toAdd.length === 0) {
+      toast({ title: "All Set", description: "These categories already exist." });
+      return;
+    }
+
+    await db.categories.bulkAdd(
+      toAdd.map(name => ({ name, description: '', color: '#6b7280', createdAt: new Date() }))
+    );
+    toast({ title: "Categories Added", description: `Added ${toAdd.length} categories for ${BUSINESS_TYPES.find(b => b.value === bizType)?.label || bizType}` });
+  };
+
   return (
     <div className="space-y-6 max-w-4xl">
       <div className="flex flex-col gap-1">
         <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
         <p className="text-muted-foreground">Configure your POS system preferences.</p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Building2 className="size-5" /> Business Profile
+          </CardTitle>
+          <CardDescription>Set up your business information</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label>Business Name</Label>
+              <Input value={bizName} onChange={(e) => setBizName(e.target.value)} placeholder="Your business name" />
+            </div>
+            <div className="space-y-2">
+              <Label>Business Type</Label>
+              <Select value={bizType} onValueChange={setBizType}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {BUSINESS_TYPES.map(t => (
+                    <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label>Phone</Label>
+              <Input value={bizPhone} onChange={(e) => setBizPhone(e.target.value)} placeholder="Phone number" />
+            </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input value={bizEmail} onChange={(e) => setBizEmail(e.target.value)} placeholder="Email address" type="email" />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label>Address</Label>
+              <Input value={bizAddress} onChange={(e) => setBizAddress(e.target.value)} placeholder="Business address" />
+            </div>
+            <div className="space-y-2 md:col-span-2">
+              <Label>Logo URL</Label>
+              <Input value={bizLogo} onChange={(e) => setBizLogo(e.target.value)} placeholder="https://example.com/logo.png" />
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <Button onClick={handleSaveBusinessSettings}>Save Profile</Button>
+            <Button variant="outline" onClick={handleAddSuggestedCategories} className="gap-2">
+              <Tags className="size-4" />
+              Add {BUSINESS_TYPES.find(b => b.value === bizType)?.label} Categories
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">

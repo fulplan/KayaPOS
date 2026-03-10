@@ -9,14 +9,18 @@ import {
   WifiOff, 
   Menu,
   Package,
-  FileText
+  FileText,
+  Users
 } from "lucide-react";
 import { useStore } from "@/lib/store";
+import { useAuth } from "@/lib/auth";
+import { db } from "@/lib/db";
+import { useLiveQuery } from "dexie-react-hooks";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useState } from "react";
 import NotificationBell from "@/components/layout/NotificationBell";
 
@@ -27,16 +31,35 @@ interface DashboardLayoutProps {
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [location] = useLocation();
   const { isOffline } = useStore();
+  const { user, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
-    { name: "POS Terminal", href: "/pos", icon: Store },
-    { name: "Inventory", href: "/inventory", icon: Package },
-    { name: "Transactions", href: "/transactions", icon: Receipt },
-    { name: "Quotes", href: "/quotes", icon: FileText },
-    { name: "Settings", href: "/settings", icon: Settings },
+  const businessSettings = useLiveQuery(() => db.businessSettings.toCollection().first());
+  const businessName = businessSettings?.businessName || "Kaya POS";
+
+  const allNavigation = [
+    { name: "Dashboard", href: "/", icon: LayoutDashboard, roles: ["admin", "manager", "cashier"] },
+    { name: "POS Terminal", href: "/pos", icon: Store, roles: ["admin", "manager", "cashier"] },
+    { name: "Inventory", href: "/inventory", icon: Package, roles: ["admin", "manager"] },
+    { name: "Transactions", href: "/transactions", icon: Receipt, roles: ["admin", "manager", "cashier"] },
+    { name: "Quotes", href: "/quotes", icon: FileText, roles: ["admin", "manager", "cashier"] },
+    { name: "Settings", href: "/settings", icon: Settings, roles: ["admin", "manager"] },
+    { name: "Users", href: "/admin", icon: Users, roles: ["admin"] },
   ];
+
+  const navigation = allNavigation.filter(item => 
+    user && item.roles.includes(user.role)
+  );
+
+  const userInitials = user?.fullName
+    ? user.fullName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.username?.slice(0, 2).toUpperCase() || "??";
+
+  const roleLabel = user?.role === 'admin' ? 'Admin' : user?.role === 'manager' ? 'Manager' : 'Cashier';
+
+  const handleLogout = async () => {
+    await logout();
+  };
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col gap-4 bg-sidebar text-sidebar-foreground">
@@ -45,7 +68,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="size-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground">
             <Store className="size-5" />
           </div>
-          <span>Kaya POS</span>
+          <span className="truncate">{businessName}</span>
         </div>
       </div>
       
@@ -75,14 +98,18 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       <div className="p-4 border-t border-sidebar-border/10">
         <div className="flex items-center gap-3 rounded-lg bg-sidebar-accent/30 p-3">
           <Avatar className="size-9 rounded-md border border-sidebar-border/20">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback className="rounded-md">YA</AvatarFallback>
+            <AvatarFallback className="rounded-md text-xs font-bold">{userInitials}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col overflow-hidden">
-            <span className="text-sm font-medium truncate">Yaw Asamoah</span>
-            <span className="text-xs text-sidebar-foreground/60 truncate">Manager</span>
+            <span className="text-sm font-medium truncate">{user?.fullName || user?.username}</span>
+            <span className="text-xs text-sidebar-foreground/60 truncate">{roleLabel}</span>
           </div>
-          <Button variant="ghost" size="icon" className="ml-auto h-8 w-8 text-sidebar-foreground/60 hover:text-sidebar-foreground">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="ml-auto h-8 w-8 text-sidebar-foreground/60 hover:text-sidebar-foreground"
+            onClick={handleLogout}
+          >
             <LogOut className="size-4" />
           </Button>
         </div>
@@ -92,12 +119,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background flex">
-      {/* Desktop Sidebar */}
       <aside className="hidden w-64 border-r bg-sidebar md:flex md:flex-col fixed inset-y-0 z-50">
         <SidebarContent />
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 md:pl-64 flex flex-col min-h-screen transition-all duration-300">
         <header className="sticky top-0 z-40 flex h-16 items-center gap-4 border-b bg-background/80 px-6 backdrop-blur-xl supports-[backdrop-filter]:bg-background/60">
           <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
