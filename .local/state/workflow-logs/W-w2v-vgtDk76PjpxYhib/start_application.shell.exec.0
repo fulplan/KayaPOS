@@ -1,0 +1,632 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K4:15:41 PM [express] serving on port 5000
+4:15:54 PM [express] POST /api/sync/products 200 in 913ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:16:15 PM [express] POST /api/sync/products 200 in 39ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:16:48 PM [express] POST /api/sync/products 200 in 77ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:17:10 PM [express] POST /api/sync/products 200 in 73ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:17:49 PM [express] POST /api/sync/products 200 in 147ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:18:10 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:18:49 PM [express] POST /api/sync/products 200 in 39ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:20:16 PM [express] POST /api/sync/products 200 in 76ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:20:31 PM [express] POST /api/sync/products 200 in 52ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:21:26 PM [express] POST /api/sync/products 200 in 86ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:22:26 PM [express] POST /api/sync/products 200 in 43ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:23:16 PM [express] POST /api/sync/products 200 in 43ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:23:26 PM [express] POST /api/sync/products 200 in 39ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:24:26 PM [express] POST /api/sync/products 200 in 41ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:25:26 PM [express] POST /api/sync/products 200 in 39ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:26:26 PM [express] POST /api/sync/products 200 in 142ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:26:54 PM [express] POST /api/sync/products 200 in 37ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:27:26 PM [express] POST /api/sync/products 200 in 47ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:27:50 PM [express] POST /api/sync/products 200 in 47ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:28:26 PM [express] POST /api/sync/products 200 in 49ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:28:50 PM [express] POST /api/sync/products 200 in 36ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:29:26 PM [express] POST /api/sync/products 200 in 73ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:29:50 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:30:26 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:30:50 PM [express] POST /api/sync/products 200 in 197ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:31:26 PM [express] POST /api/sync/products 200 in 44ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:31:50 PM [express] POST /api/sync/products 200 in 113ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:32:26 PM [express] POST /api/sync/products 200 in 38ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:32:50 PM [express] POST /api/sync/products 200 in 43ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:33:26 PM [express] POST /api/sync/products 200 in 173ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:34:26 PM [express] POST /api/sync/products 200 in 96ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:34:32 PM [express] POST /api/sync/products 200 in 71ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:35:26 PM [express] POST /api/sync/products 200 in 41ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:35:32 PM [express] POST /api/sync/products 200 in 29ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:36:26 PM [express] POST /api/sync/products 200 in 41ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:36:32 PM [express] POST /api/sync/products 200 in 29ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:37:26 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:37:32 PM [express] POST /api/sync/products 200 in 36ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:38:02 PM [express] POST /api/sync/products 200 in 109ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:38:26 PM [express] POST /api/sync/products 200 in 54ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:39:26 PM [express] POST /api/sync/products 200 in 83ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:39:32 PM [express] POST /api/sync/products 200 in 49ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:40:26 PM [express] POST /api/sync/products 200 in 37ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:40:32 PM [express] POST /api/sync/products 200 in 73ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:41:26 PM [express] POST /api/sync/products 200 in 35ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:41:32 PM [express] POST /api/sync/products 200 in 30ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:42:21 PM [express] POST /api/sync/products 200 in 38ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:42:26 PM [express] POST /api/sync/products 200 in 34ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:42:49 PM [express] POST /api/sync/products 200 in 38ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:43:26 PM [express] POST /api/sync/products 200 in 71ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:44:26 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:44:32 PM [express] POST /api/sync/products 200 in 67ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:44:49 PM [express] POST /api/sync/products 200 in 44ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:45:26 PM [express] POST /api/sync/products 200 in 41ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:46:07 PM [express] POST /api/sync/products 200 in 217ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:46:27 PM [express] POST /api/sync/products 200 in 38ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:47:32 PM [express] POST /api/sync/products 200 in 68ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:47:32 PM [express] POST /api/sync/products 200 in 84ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:48:01 PM [express] POST /api/sync/products 200 in 34ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:48:32 PM [express] POST /api/sync/products 200 in 37ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:49:32 PM [express] POST /api/sync/products 200 in 48ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:49:32 PM [express] POST /api/sync/products 200 in 50ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:50:27 PM [express] POST /api/sync/products 200 in 109ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:50:32 PM [express] POST /api/sync/products 200 in 65ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:51:09 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/App.tsx, /src/pages/Settings.tsx, /src/pages/Dashboard.tsx, /src/pages/Transactions.tsx, /src/pages/POS.tsx, /src/pages/Quotes.tsx, /src/pages/Inventory.tsx, /src/components/layout/NotificationBell.tsx, /src/components/inventory/CategoryDialog.tsx, /src/components/inventory/VariantDialog.tsx, /src/components/inventory/BatchDialog.tsx, /src/components/inventory/ProductDialog.tsx[22m
+4:51:20 PM [express] POST /api/sync/products 200 in 35ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:51:22 PM [express] POST /api/sync/products 200 in 31ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:51:27 PM [express] POST /api/sync/products 200 in 28ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:51:32 PM [express] POST /api/sync/products 200 in 26ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:52:15 PM [express] POST /api/sync/products 200 in 43ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:52:17 PM [express] POST /api/sync/products 200 in 37ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:52:32 PM [express] POST /api/sync/products 200 in 45ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:52:32 PM [express] POST /api/sync/products 200 in 43ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:52:35 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+4:52:37 PM [express] GET /api/auth/me 200 in 4ms
+4:52:38 PM [express] GET /api/auth/me 200 in 3ms
+4:52:38 PM [express] GET /api/auth/me 200 in 3ms
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:53:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/layout/DashboardLayout.tsx[22m
+4:53:15 PM [express] POST /api/sync/products 200 in 73ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:53:17 PM [express] POST /api/sync/products 200 in 38ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:53:28 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/App.tsx, /src/pages/Settings.tsx[22m
+4:53:29 PM [express] GET /api/auth/me 200 in 22ms
+4:53:30 PM [express] GET /api/auth/me 200 in 4ms
+4:53:31 PM [express] GET /api/auth/me 200 in 3ms
+4:53:32 PM [express] POST /api/sync/products 200 in 42ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:53:32 PM [express] POST /api/sync/products 200 in 42ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:54:15 PM [express] POST /api/sync/products 200 in 35ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:54:17 PM [express] POST /api/sync/products 200 in 25ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:54:20 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Settings.tsx[22m
+4:54:32 PM [express] POST /api/sync/products 200 in 100ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:54:32 PM [express] POST /api/sync/products 200 in 107ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:55:02 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/components/inventory/ProductDialog.tsx[22m
+4:55:15 PM [express] POST /api/sync/products 200 in 42ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:55:17 PM [express] POST /api/sync/products 200 in 27ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:55:32 PM [express] POST /api/sync/products 200 in 46ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:55:32 PM [express] POST /api/sync/products 200 in 31ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:55:39 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:55:51 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:56:10 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x3)[39m
+4:56:15 PM [express] POST /api/sync/products 200 in 40ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+4:56:17 PM [express] POST /api/sync/products 200 in 29ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:56:21 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x4)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:56:27 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x5)[39m
+4:56:32 PM [express] POST /api/sync/products 200 in 45ms :: {"synced":8,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"}]}
+4:56:32 PM [express] POST /api/sync/products 200 in 49ms :: {"synced":9,"results":[{"clientId":1,"action":"updated"},{"clientId":2,"action":"updated"},{"clientId":3,"action":"updated"},{"clientId":4,"action":"updated"},{"clientId":5,"action":"updated"},{"clientId":6,"action":"updated"},{"clientId":7,"action":"updated"},{"clientId":8,"action":"updated"},{"clientId":9,"action":"updated"}]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:56:43 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x6)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m4:56:52 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/POS.tsx[22m [33m(x7)[39m

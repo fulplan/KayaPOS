@@ -1,0 +1,500 @@
+
+> rest-express@1.0.0 dev
+> NODE_ENV=development tsx server/index.ts
+
+[1G[0K5:01:13 PM [express] serving on port 5000
+5:01:21 PM [express] GET /api/auth/me 401 in 2ms :: {"error":"Not authenticated"}
+5:01:26 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:01:27 PM [express] GET /api/auth/me 401 in 0ms :: {"error":"Not authenticated"}
+5:01:38 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:01:54 PM [express] POST /api/auth/login 401 in 103ms :: {"error":"Invalid username or password"}
+5:02:12 PM [express] POST /api/auth/login 200 in 139ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:02:30 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:03:17 PM [express] POST /api/sync/business-settings 200 in 155ms :: {"success":true}
+5:03:25 PM [express] GET /api/admin/users 200 in 7ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"}]
+5:03:41 PM [express] POST /api/admin/users 200 in 110ms :: {"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true}
+5:03:41 PM [express] GET /api/admin/users 200 in 7ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"}]
+5:03:52 PM [express] GET /api/auth/me 200 in 30ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:03:56 PM [express] GET /api/auth/me 304 in 5ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:04:01 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:04:01 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:04:27 PM [express] GET /api/auth/me 304 in 14ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:04:32 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:04:32 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:04:37 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/POS.tsx, /src/index.css[22m
+5:04:42 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:04:43 PM [express] GET /api/auth/me 304 in 13ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:04:46 PM [express] GET /api/auth/me 304 in 6ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:04:51 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:04:51 PM [express] POST /api/sync/business-settings 200 in 250ms :: {"success":true}
+5:05:48 PM [express] POST /api/sync/business-settings 200 in 65ms :: {"success":true}
+5:05:50 PM [express] GET /api/admin/users 304 in 7ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"}]
+5:05:51 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:05:52 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:05:56 PM [express] POST /api/auth/logout 200 in 45ms :: {"success":true}
+5:06:04 PM [express] POST /api/auth/login 200 in 117ms :: {"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true}
+5:06:51 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:06:52 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:07:22 PM [express] POST /api/auth/logout 200 in 14ms :: {"success":true}
+5:07:28 PM [express] POST /api/auth/login 200 in 98ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:07:31 PM [express] GET /api/admin/users 304 in 7ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"}]
+5:07:47 PM [express] POST /api/admin/users 200 in 110ms :: {"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true}
+5:07:48 PM [express] GET /api/admin/users 200 in 6ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:07:51 PM [express] POST /api/auth/logout 200 in 4ms :: {"success":true}
+5:07:51 PM [express] POST /api/sync/business-settings 401 in 1ms :: {"error":"Not authenticated"}
+5:07:52 PM [express] POST /api/sync/business-settings 401 in 1ms :: {"error":"Not authenticated"}
+5:07:56 PM [express] POST /api/auth/login 200 in 88ms :: {"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true}
+5:08:38 PM [express] POST /api/auth/logout 200 in 44ms :: {"success":true}
+5:08:52 PM [express] POST /api/sync/business-settings 401 in 11ms :: {"error":"Not authenticated"}
+5:08:52 PM [express] POST /api/sync/business-settings 401 in 1ms :: {"error":"Not authenticated"}
+5:08:54 PM [express] POST /api/auth/login 401 in 95ms :: {"error":"Invalid username or password"}
+5:08:58 PM [express] POST /api/auth/login 200 in 88ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:09:10 PM [express] GET /api/admin/users 304 in 27ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:09:35 PM [express] GET /api/admin/users 304 in 23ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:09:46 PM [express] GET /api/admin/users 304 in 78ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:09:52 PM [express] POST /api/sync/business-settings 200 in 10ms :: {"success":true}
+5:09:53 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:10:03 PM [express] GET /api/admin/users 304 in 25ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:10:23 PM [express] GET /api/admin/users 304 in 24ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:10:52 PM [express] POST /api/sync/business-settings 200 in 57ms :: {"success":true}
+5:10:53 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:11:53 PM [express] POST /api/sync/business-settings 200 in 91ms :: {"success":true}
+5:11:53 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:12:53 PM [express] POST /api/sync/business-settings 200 in 63ms :: {"success":true}
+5:12:53 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:12:55 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/App.tsx, /src/pages/Settings.tsx, /src/pages/Dashboard.tsx, /src/components/layout/DashboardLayout.tsx, /src/pages/Transactions.tsx, /src/pages/Quotes.tsx, /src/pages/POS.tsx, /src/pages/Inventory.tsx, /src/components/layout/NotificationBell.tsx, /src/components/inventory/BatchDialog.tsx, /src/components/inventory/VariantDialog.tsx, /src/components/inventory/CategoryDialog.tsx, /src/components/inventory/ProductDialog.tsx[22m
+5:12:57 PM [express] GET /api/admin/users 304 in 6ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:12:57 PM [express] GET /api/auth/me 304 in 5ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:12:57 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:13:00 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:13:02 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:13:02 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:03 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m
+5:13:05 PM [express] GET /api/auth/me 304 in 4ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:13:05 PM [express] GET /api/auth/me 401 in 0ms :: {"error":"Not authenticated"}
+5:13:05 PM [express] GET /api/admin/users 304 in 4ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:13:06 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:08 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/index.css[22m [33m(x2)[39m
+5:13:10 PM [express] GET /api/auth/me 401 in 1ms :: {"error":"Not authenticated"}
+5:13:10 PM [express] GET /api/auth/me 304 in 5ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+5:13:11 PM [express] GET /api/auth/me 401 in 0ms :: {"error":"Not authenticated"}
+5:13:13 PM [express] GET /api/admin/users 304 in 7ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:20 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:29 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m [33m(x2)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:40 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m [33m(x3)[39m
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:13:45 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m [33m(x4)[39m
+5:13:53 PM [express] POST /api/sync/business-settings 200 in 18ms :: {"success":true}
+5:13:54 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:14:03 PM [express] GET /api/auth/me 304 in 5ms :: {"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[1;1H[0J[2m5:14:04 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/Settings.tsx, /src/index.css[22m [33m(x5)[39m
+5:14:08 PM [express] POST /api/sync/business-settings 200 in 10ms :: {"success":true}
+5:14:08 PM [express] POST /api/sync/business-settings 200 in 99ms :: {"success":true}
+5:14:14 PM [express] GET /api/auth/me 401 in 0ms :: {"error":"Not authenticated"}
+5:15:02 PM [express] GET /api/admin/users 304 in 54ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:15:08 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:15:09 PM [express] POST /api/sync/business-settings 200 in 10ms :: {"success":true}
+5:16:09 PM [express] POST /api/sync/business-settings 200 in 32ms :: {"success":true}
+5:16:10 PM [express] POST /api/sync/business-settings 200 in 7ms :: {"success":true}
+5:17:10 PM [express] POST /api/sync/business-settings 200 in 59ms :: {"success":true}
+5:17:11 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:18:10 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:18:11 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:18:40 PM [express] GET /api/admin/users 304 in 54ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:19:03 PM [express] GET /api/admin/users 304 in 22ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:19:07 PM [express] GET /api/admin/users 304 in 5ms :: [{"id":"e2a85d93-904d-4763-a85a-15bbdf21c99f","username":"admin","fullName":"Administrator","role":"admin","isActive":true,"createdAt":"2026-03-10T16:57:00.496Z"},{"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true,"createdAt":"2026-03-10T17:03:41.688Z"},{"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true,"createdAt":"2026-03-10T17:07:47.915Z"}]
+5:19:08 PM [express] POST /api/auth/logout 200 in 4ms :: {"success":true}
+5:19:10 PM [express] POST /api/sync/business-settings 401 in 2ms :: {"error":"Not authenticated"}
+5:19:11 PM [express] POST /api/sync/business-settings 401 in 1ms :: {"error":"Not authenticated"}
+5:19:16 PM [express] POST /api/auth/login 200 in 90ms :: {"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true}
+5:19:24 PM [express] GET /api/auth/me 200 in 6ms :: {"id":"60187adb-39b5-43df-8101-be9a7b7dd54a","username":"me","fullName":"me","role":"manager","isActive":true}
+5:19:29 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:19:29 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:20:17 PM [express] POST /api/auth/logout 200 in 13ms :: {"success":true}
+5:20:24 PM [express] POST /api/auth/login 200 in 98ms :: {"id":"eb9c5cd0-369d-4eb8-831b-476315350571","username":"las","fullName":"las","role":"cashier","isActive":true}
+5:20:29 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:20:30 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:21:30 PM [express] POST /api/sync/business-settings 200 in 33ms :: {"success":true}
+5:21:30 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
+5:22:30 PM [express] POST /api/sync/business-settings 200 in 36ms :: {"success":true}
+5:22:30 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:23:30 PM [express] POST /api/sync/business-settings 200 in 67ms :: {"success":true}
+5:23:30 PM [express] POST /api/sync/business-settings 200 in 10ms :: {"success":true}
+5:24:32 PM [express] POST /api/sync/business-settings 200 in 54ms :: {"success":true}
+5:24:32 PM [express] POST /api/sync/business-settings 200 in 26ms :: {"success":true}
+5:25:32 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:25:32 PM [express] POST /api/sync/business-settings 200 in 29ms :: {"success":true}
+5:26:32 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:26:32 PM [express] POST /api/sync/business-settings 200 in 27ms :: {"success":true}
+5:27:33 PM [express] POST /api/sync/business-settings 200 in 61ms :: {"success":true}
+5:27:33 PM [express] POST /api/sync/business-settings 200 in 65ms :: {"success":true}
+5:28:34 PM [express] POST /api/sync/business-settings 200 in 45ms :: {"success":true}
+5:28:34 PM [express] POST /api/sync/business-settings 200 in 45ms :: {"success":true}
+5:29:35 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:29:35 PM [express] POST /api/sync/business-settings 200 in 25ms :: {"success":true}
+5:30:36 PM [express] POST /api/sync/business-settings 200 in 68ms :: {"success":true}
+5:30:37 PM [express] POST /api/sync/business-settings 200 in 9ms :: {"success":true}
+5:31:37 PM [express] POST /api/sync/business-settings 200 in 64ms :: {"success":true}
+5:31:38 PM [express] POST /api/sync/business-settings 200 in 8ms :: {"success":true}
