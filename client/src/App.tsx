@@ -17,6 +17,7 @@ import Settings from "@/pages/Settings";
 import Quotes from "@/pages/Quotes";
 import Admin from "@/pages/Admin";
 import { startAutoSync } from "@/lib/sync";
+import { loadSavedTheme } from "@/lib/theme";
 import { useAuth } from "@/lib/auth";
 import { useStore } from "@/lib/store";
 import { Loader2 } from "lucide-react";
@@ -51,6 +52,7 @@ function AppContent() {
 
   useEffect(() => {
     checkAuth();
+    loadSavedTheme();
   }, []);
 
   useEffect(() => {

@@ -93,6 +93,7 @@ script/          - Build scripts
 - **Transactions**: Order history with status filtering, expandable detail view
 - **User Management**: Admin page to create/edit/deactivate users, reset passwords, assign roles
 - **Business Profile**: Set business name/type/contact in Settings, adapts categories and product fields
+- **Theme Customization**: 10 preset color themes (Emerald, Blue, Indigo, Purple, Rose, Orange, Red, Green, Slate, Cyan) in Settings, live preview, persisted in Dexie
 - **Notifications**: Bell icon with low stock and expiry alerts
 - **Data Sync**: Batched sync with retry/backoff to PostgreSQL, manual sync in Settings
 - **PWA**: Service worker, web manifest, install prompt, offline caching
@@ -108,6 +109,7 @@ script/          - Build scripts
 - 2026-03-10: Added cart auto-save to localStorage for crash resilience
 - 2026-03-10: Added React error boundary for graceful crash recovery
 - 2026-03-10: Added batched sync with retry/backoff logic
+- 2026-03-10: Added theme color customization with 10 preset palettes in Settings
 - 2026-03-10: Cleaned up hardcoded data (removed "Yaw Asamoah/Manager", old Food/Drinks categories)
 - 2026-03-10: Sidebar shows dynamic user name/role and business name
 - 2026-02-19: Production readiness fixes, PWA support, Quotes, Draft Sales, Tax Rules, Inventory Management

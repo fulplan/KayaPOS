@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { db, type TaxRule, type BusinessSettings } from "@/lib/db";
 import { useLiveQuery } from "dexie-react-hooks";
+import { THEME_PRESETS, applyTheme } from "@/lib/theme";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,7 @@ import {
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from "@/components/ui/select";
-import { Plus, Edit, Trash2, Receipt, MoreHorizontal, Cloud, RefreshCw, Building2, Tags } from "lucide-react";
+import { Plus, Edit, Trash2, Receipt, MoreHorizontal, Cloud, RefreshCw, Building2, Tags, Palette, Check } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -66,6 +67,7 @@ export default function Settings() {
   const [bizEmail, setBizEmail] = useState("");
   const [bizLogo, setBizLogo] = useState("");
   const [bizType, setBizType] = useState<string>("retail");
+  const [selectedTheme, setSelectedTheme] = useState("emerald");
 
   useEffect(() => {
     if (businessSettings) {
@@ -75,6 +77,7 @@ export default function Settings() {
       setBizEmail(businessSettings.email || "");
       setBizLogo(businessSettings.logo || "");
       setBizType(businessSettings.businessType || "retail");
+      setSelectedTheme(businessSettings.themeColor || "emerald");
     }
   }, [businessSettings]);
 
@@ -241,6 +244,68 @@ export default function Settings() {
             <Button variant="outline" onClick={handleAddSuggestedCategories} className="gap-2">
               <Tags className="size-4" />
               Add {BUSINESS_TYPES.find(b => b.value === bizType)?.label} Categories
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Palette className="size-5" /> Theme Color
+          </CardTitle>
+          <CardDescription>Choose a color scheme that matches your brand</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-5 gap-3">
+            {THEME_PRESETS.map((preset) => (
+              <button
+                key={preset.key}
+                onClick={() => {
+                  setSelectedTheme(preset.key);
+                  applyTheme(preset.key);
+                }}
+                className={`group relative flex flex-col items-center gap-2 rounded-xl border-2 p-3 transition-all hover:shadow-md ${
+                  selectedTheme === preset.key
+                    ? 'border-primary shadow-md bg-primary/5'
+                    : 'border-transparent bg-muted/50 hover:border-border'
+                }`}
+              >
+                <div
+                  className="size-10 rounded-full shadow-inner ring-2 ring-white/50"
+                  style={{ backgroundColor: preset.swatch }}
+                />
+                {selectedTheme === preset.key && (
+                  <div className="absolute top-1.5 right-1.5">
+                    <Check className="size-3.5 text-primary" />
+                  </div>
+                )}
+                <span className="text-xs font-medium">{preset.label}</span>
+              </button>
+            ))}
+          </div>
+          <div className="mt-4">
+            <Button
+              onClick={async () => {
+                try {
+                  const existing = await db.businessSettings.toCollection().first();
+                  if (existing?.id) {
+                    await db.businessSettings.update(existing.id, { themeColor: selectedTheme, updatedAt: new Date() });
+                  } else {
+                    await db.businessSettings.add({
+                      businessName: '',
+                      businessType: 'retail',
+                      themeColor: selectedTheme,
+                      updatedAt: new Date(),
+                    });
+                  }
+                  toast({ title: "Theme Saved", description: `${THEME_PRESETS.find(p => p.key === selectedTheme)?.label} theme applied` });
+                } catch {
+                  toast({ title: "Error", description: "Failed to save theme.", variant: "destructive" });
+                }
+              }}
+            >
+              Save Theme
             </Button>
           </div>
         </CardContent>

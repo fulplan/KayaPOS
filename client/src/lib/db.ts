@@ -125,6 +125,7 @@ export interface BusinessSettings {
   email?: string;
   logo?: string;
   businessType: 'pharmacy' | 'salon' | 'restaurant' | 'retail' | 'wholesale' | 'other';
+  themeColor?: string;
   updatedAt: Date;
 }
 
